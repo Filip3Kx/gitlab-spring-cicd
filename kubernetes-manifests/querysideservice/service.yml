@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: querysideservice-lb
+  namespace: spring-app
+spec:
+  selector:
+    app: spring-querysideservice
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer

@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper-deployment
+  namespace: spring-app
+  labels:
+    app: spring-zookeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-zookeeper
+  template:
+    metadata:
+      labels:
+        app: spring-zookeeper
+    spec:
+      containers:
+        name: zookeeper-pod
+        image: eventuateio/eventuate-zookeeper
+        ports:
+        - name: zookeeper-port
+          containerPort: 2181

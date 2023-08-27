@@ -1,0 +1,94 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cdcservice-deployment
+  namespace: spring-app
+  labels:
+    app: spring-cdcservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-cdcservice
+  template:
+    metadata:
+      labels:
+        app: spring-cdcservice
+    spec:
+      containers:
+      - name: cdcservice-pod
+        image: eventuateio/eventuate-cdc-service
+        ports:
+          containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: SPRING_DATASOURCE_URL
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: SPRING_DATASOURCE_USERNAME
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: SPRING_DATASOURCE_PASSWORD
+        - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        - name: EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS
+        - name: EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING
+        - name: EVENTUATELOCAL_CDC_DB_USER_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_CDC_DB_USER_NAME
+        - name: EVENTUATELOCAL_CDC_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_CDC_DB_PASSWORD
+        - name: EVENTUATELOCAL_CDC_READ_OLD_DEBEZIUM_DB_OFFSET_STORAGE_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_CDC_READ_OLD_DEBEZIUM_DB_OFFSET_STORAGE_TOPIC
+        - name: EVENTUATELOCAL_CDC_READER_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_CDC_READER_NAME
+        - name: EVENTUATELOCAL_CDC_OFFSET_STORE_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_CDC_OFFSET_STORE_KEY
+        - name: EVENTUATELOCAL_CDC_MYSQL_BINLOG_CLIENT_UNIQUE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_CDC_MYSQL_BINLOG_CLIENT_UNIQUE_ID
+        - name: EVENTUATE_OUTBOX_ID
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATE_OUTBOX_ID
+        - name: EVENTUATE_CDC_TYPE
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATE_CDC_TYPE

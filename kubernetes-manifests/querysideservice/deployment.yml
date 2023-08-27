@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: querysideservice-deployment
+  namespace: spring-app
+  labels:
+    app: spring-querysideservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-querysideservice
+  template:
+    metadata:
+      labels:
+        app: spring-querysideservice
+    spec:
+      containers:
+      - name: querysideservice-pod
+        image: # do wbicia
+        ports:
+          containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: SPRING_DATASOURCE_URL
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: SPRING_DATASOURCE_USERNAME
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-configmap
+              key: SPRING_DATASOURCE_PASSWORD
+        - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        - name: EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS
+        - name: EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING
