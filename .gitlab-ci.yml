@@ -1,0 +1,27 @@
+stages:         
+  - build
+  - test
+  - deploy
+
+build-job:       
+  stage: build
+  script:
+    - export DOCKER_HOST_IP=10.132.0.12
+    - chmod +x build.sh
+    - ./build.sh $* -P eventuateDriver=local
+    - echo "Build completed"
+
+e2e-test-job:   
+  stage: test    
+  script:
+    - export DOCKER_HOST_IP=10.132.0.12
+    - chmod +x test.sh
+    - ./test.sh $* -P eventuateDriver=local
+    - echo "E2E tests completed"
+
+push-images-job:
+  stage: deploy
+  environment: production
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
