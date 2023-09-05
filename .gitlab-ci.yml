@@ -1,8 +1,11 @@
 stages:         
   - build
   - test
+  - pack
   - deploy
-
+variables:
+  HELM_CHART_PATH: ./kubernetes-manifests
+  
 build-job:       
   stage: build
   script:
@@ -15,9 +18,21 @@ e2e-test-job:
     - ./test.sh $* -P eventuateDriver=local
     - echo "E2E tests completed"
 
-push-images-job:
+helm-package-job:
+  stage: pack
+  script:
+    - echo "Building Helm chart..."
+    - helm lint $HELM_CHART_PATH
+    - helm package $HELM_CHART_PATH --destination ./helm-packages 
+    - echo "Helm chart built successfully"
+
+deploy-job:
   stage: deploy
   environment: production
   script:
-    - echo "Deploying application..."
+    - echo "Deploying application to Kubernetes..."
+    - kubectl config <context> <cluster>
+    - helm upgrade --install spring-cicd $HELM_CHART_PATH
     - echo "Application successfully deployed."
+  only:
+    - master 
